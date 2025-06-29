@@ -1,0 +1,46 @@
+﻿openapi: 3.0.0
+
+info:
+  title: IcM Comment API
+  description: Posts a comment to the Discussion tab of an IcM incident
+  version: "v1"
+
+servers:
+  - url: https://portal.microsofticm.com/api2/
+
+paths:
+  /user/incidentapi/incidents/{incidentId}/enrichments:
+    post:
+      operationId: postIncidentComment
+      summary: Post a comment to an IcM incident
+      parameters:
+        - in: path
+          name: incidentId
+          schema:
+            type: string
+          required: true
+          description: The IcM incident ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequest'
+      responses:
+        "200":
+          description: Comment posted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  schemas:
+    CommentRequest:
+      type: object
+      properties:
+        comment:
+          type: string
+          description: The comment text to post
+      required:
+        - comment
