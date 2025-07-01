@@ -1,31 +1,34 @@
 openapi: 3.0.0
 
 info:
-  title: IcM Comment API
-  description: Posts a comment to the Discussion tab of an IcM incident
+  title: IcM Comment Logic App Proxy
+  description: Proxies a comment to the Discussion tab of an IcM incident via Logic App.
   version: "v1"
 
 servers:
-  - url: https://portal.microsofticm.com/api2/
+  - url: https://prod.microsofticm.com/api2/
 
 paths:
-  /user/incidentapi/incidents/{incidentId}/enrichments:
-    post:
+  /incidentapi/incidents({Id}):
+    patch:
       operationId: postIncidentComment
-      summary: Post a comment to an IcM incident
-      parameters:
-        - in: path
-          name: incidentId
-          schema:
-            type: string
-          required: true
-          description: The IcM incident ID
+      summary: Post a comment to an IcM incident via Logic App
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CommentRequest'
+              type: object
+              properties:
+                Id:
+                  type: string
+                  description: The IcM incident ID
+                Description:
+                  type: string
+                  description: The comment text to post
+              required:
+                - Id
+                - Description
       responses:
         "200":
           description: Comment posted successfully
@@ -33,18 +36,3 @@ paths:
             application/json:
               schema:
                 type: object
-
-components:
-  schemas:
-    CommentRequest:
-      type: object
-      properties:
-        comment:
-          type: string
-          description: The comment text to post
-        commentType:
-          type: string
-          description: The type of comment (must be "Discussion" for discussion tab)
-      required:
-        - comment
-        - commentType
